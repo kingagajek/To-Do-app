@@ -1,10 +1,5 @@
 import java.awt.*;
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
 
 public class TaskItem {
     private String taskDescription;
@@ -19,7 +14,7 @@ public class TaskItem {
         return taskDescription;
     }
 
-    public void setTaskDescription() {
+    public void setTaskDescription(String taskDescription) {
         this.taskDescription = taskDescription;
     }
 

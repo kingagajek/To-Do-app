@@ -33,12 +33,37 @@ public class MainApp extends Application {
                             setGraphic(null); // Nie pokazuj żadnych grafik w komórce
                         } else {
                             Label label = new Label(item.getTaskDescription()); // Stwórz nowy label z opisem zadania
+                            TextField editTextField = new TextField(item.getTaskDescription());
+                            editTextField.setVisible(false); // początkowo pole edycji jest ukryte
                             Button deleteButton = new Button("Usuń"); // Stwórz przycisk do usuwania zadania
-                            deleteButton.setOnAction(event -> {
-                                listView.getItems().remove(item);
+                            deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+                                 @Override
+                                 public void handle(ActionEvent event) {
+                                     listView.getItems().remove(item);
+                                 }
+                            });
+                            Button editButton = new Button("Edytuj");
+                            editButton.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    label.setVisible(false);
+                                    editTextField.setVisible(true);
+                                    editTextField.requestFocus();
+                                }
                             });
 
-                            HBox hBox = new HBox(label, deleteButton); // Umieść label i przycisk w HBox
+                            editTextField.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    item.setTaskDescription(editTextField.getText());
+                                    label.setText(item.getTaskDescription());
+                                    editTextField.setVisible(false);
+                                    label.setVisible(true);
+                                    listView.refresh();
+                                }
+                            });
+
+                            HBox hBox = new HBox(label, editTextField, deleteButton, editButton); // Umieść label i przycisk w HBox
                             hBox.setSpacing(10); // Dodaj trochę przestrzeni między label a przyciskiem
                             setGraphic(hBox); // Ustaw HBox jako zawartość graficzną komórki
                         }
