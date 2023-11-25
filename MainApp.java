@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -15,6 +16,8 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 700, 650);
+
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
         TextField textField = new TextField();
         Button addButton = new Button("Dodaj");
@@ -32,9 +35,24 @@ public class MainApp extends Application {
                             setText(null); // Jeśli komórka jest pusta, nie pokazuj niczego
                             setGraphic(null); // Nie pokazuj żadnych grafik w komórce
                         } else {
-                            Label label = new Label(item.getTaskDescription()); // Stwórz nowy label z opisem zadania
+                            Text text = new Text(item.getTaskDescription());
                             TextField editTextField = new TextField(item.getTaskDescription());
                             editTextField.setVisible(false); // początkowo pole edycji jest ukryte
+
+                            CheckBox checkBox = new CheckBox();
+                            checkBox.setSelected(item.isCompleted());
+
+                            updateLabelStyle(text, item.isCompleted());
+                            checkBox.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    boolean isSelected = checkBox.isSelected();
+                                    item.setCompleted(isSelected);
+                                    updateLabelStyle(text, isSelected);
+                                    listView.refresh();
+                                }
+                            });
+
                             Button deleteButton = new Button("Usuń"); // Stwórz przycisk do usuwania zadania
                             deleteButton.setOnAction(new EventHandler<ActionEvent>() {
                                  @Override
@@ -42,11 +60,12 @@ public class MainApp extends Application {
                                      listView.getItems().remove(item);
                                  }
                             });
+
                             Button editButton = new Button("Edytuj");
                             editButton.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent event) {
-                                    label.setVisible(false);
+                                    text.setVisible(false);
                                     editTextField.setVisible(true);
                                     editTextField.requestFocus();
                                 }
@@ -56,17 +75,21 @@ public class MainApp extends Application {
                                 @Override
                                 public void handle(ActionEvent actionEvent) {
                                     item.setTaskDescription(editTextField.getText());
-                                    label.setText(item.getTaskDescription());
+                                    text.setText(item.getTaskDescription());
                                     editTextField.setVisible(false);
-                                    label.setVisible(true);
+                                    text.setVisible(true);
                                     listView.refresh();
                                 }
                             });
 
-                            HBox hBox = new HBox(label, editTextField, deleteButton, editButton); // Umieść label i przycisk w HBox
-                            hBox.setSpacing(10); // Dodaj trochę przestrzeni między label a przyciskiem
-                            setGraphic(hBox); // Ustaw HBox jako zawartość graficzną komórki
+                            HBox hBox = new HBox(text, editTextField, checkBox, deleteButton, editButton); // Umieść label i przycisk w HBox
+                            hBox.setSpacing(10); // przestrzen między label a przyciskiem
+                            setGraphic(hBox); // HBox jako zawartość graficzną komórki
                         }
+                    }
+                    private void updateLabelStyle(Text text, boolean isCompleted) {
+                        text.getStyleClass().clear();
+                        text.getStyleClass().add(isCompleted ? "text-completed" : "text-active");
                     }
                 };
             }

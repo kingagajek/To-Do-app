@@ -3,11 +3,11 @@ import javafx.scene.control.Button;
 
 public class TaskItem {
     private String taskDescription;
-    private Button deleteButton;
+    private boolean completed;
 
     public TaskItem(String taskDescription) {
         this.taskDescription = taskDescription;
-        this.deleteButton = new Button("Usuń");
+       // this.completed = false;
     }
 
     public String getTaskDescription() {
@@ -18,11 +18,16 @@ public class TaskItem {
         this.taskDescription = taskDescription;
     }
 
-    public Button getDeleteButton() {
-        return deleteButton;
+    public boolean isCompleted() {
+        return completed;
     }
 
-    public void setDeleteButton(Button deleteButton) {
-        this.deleteButton = deleteButton;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
+
+   // public void markAsCompleted() {
+     //   this.completed = true;
+    //}
+
 }

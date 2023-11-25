@@ -1,0 +1,9 @@
+.text-completed {
+    -fx-fill: grey;
+    -fx-strikethrough: true;
+}
+
+.text-active {
+    -fx-fill: black;
+    -fx-strikethrough: false;
+}
