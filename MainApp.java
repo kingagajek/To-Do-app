@@ -10,10 +10,24 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        // Test connection
+        try (Connection conn = DatabaseHandler.getConnection()) {
+            System.out.println("Połączono z bazą danych SQLite.");
+            // Tutaj można wykonać operacje na bazie danych
+        } catch (SQLException e) {
+            System.out.println("Nie udało się połączyć z bazą danych: " + e.getMessage());
+        }
+        initDatabase();
+
+
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 700, 650);
 
@@ -114,6 +128,23 @@ public class MainApp extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void initDatabase() {
+        String createTableSQL = "CREATE TABLE IF NOT EXISTS tasks ("
+                + " id integer PRIMARY KEY,"
+                + " description text NOT NULL,"
+                + " completed boolean NOT NULL CHECK (completed IN (0,1))"
+                + ");";
+
+        try (Connection conn = DatabaseHandler.getConnection();
+             Statement stmt = conn.createStatement()) {
+            // Tworzenie tabeli w bazie danych
+            stmt.execute(createTableSQL);
+            System.out.println("Tabela została utworzona.");
+        } catch (SQLException e) {
+            System.out.println("Błąd podczas tworzenia tabeli: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
