@@ -7,7 +7,6 @@ public class TaskItem {
 
     public TaskItem(String taskDescription) {
         this.taskDescription = taskDescription;
-       // this.completed = false;
     }
 
     public String getTaskDescription() {
@@ -25,9 +24,5 @@ public class TaskItem {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
-
-   // public void markAsCompleted() {
-     //   this.completed = true;
-    //}
 
 }
