@@ -114,6 +114,7 @@ public class MainApp extends Application {
             public void handle(ActionEvent event) {
                 TaskItem taskItem = new TaskItem(textField.getText());
                 listView.getItems().add(taskItem);
+                DatabaseHandler.addTask(taskItem);
                 textField.clear();
             }
         });

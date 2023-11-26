@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DatabaseHandler {
@@ -17,6 +18,17 @@ public class DatabaseHandler {
         return DriverManager.getConnection(DB_URL);
     }
 
-    // Metody do operacji na bazie danych (CRUD) poniżej
+    public static void addTask(TaskItem task) {
+        String sql = "INSERT INTO tasks(description, completed) VALUES(?, ?)";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, task.getTaskDescription());
+            pstmt.setBoolean(2, task.isCompleted());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
 
