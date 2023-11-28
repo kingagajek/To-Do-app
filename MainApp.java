@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import java.util.List;
 
 import java.sql.Statement;
 import java.sql.Connection;
@@ -36,6 +37,8 @@ public class MainApp extends Application {
         TextField textField = new TextField();
         Button addButton = new Button("Dodaj");
         ListView<TaskItem> listView = new ListView<>();
+        List<TaskItem> tasks = DatabaseHandler.loadTasks();
+        listView.getItems().setAll(tasks);
 
         listView.setCellFactory(new Callback<ListView<TaskItem>, ListCell<TaskItem>>() {
             @Override
@@ -88,16 +91,19 @@ public class MainApp extends Application {
                             editTextField.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent actionEvent) {
+                                    //TaskItem editTask = listView.getSelectionModel().getSelectedItem();
+                                    //editTask.setTaskDescription(editTextField.getText());
                                     item.setTaskDescription(editTextField.getText());
                                     text.setText(item.getTaskDescription());
                                     editTextField.setVisible(false);
                                     text.setVisible(true);
+                                    DatabaseHandler.updateTask(item);
                                     listView.refresh();
                                 }
                             });
 
                             HBox hBox = new HBox(text, editTextField, checkBox, deleteButton, editButton); // Umieść label i przycisk w HBox
-                            hBox.setSpacing(10); // przestrzen między label a przyciskiem
+                            hBox.setSpacing(2); // przestrzen między label a przyciskiem
                             setGraphic(hBox); // HBox jako zawartość graficzną komórki
                         }
                     }
